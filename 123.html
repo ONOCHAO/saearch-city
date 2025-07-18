@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Погода по городам</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6f9;
+      padding: 30px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+    }
+
+    li {
+      background: #fff;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    li:hover {
+      background: #e6f7ff;
+    }
+
+    .weather {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 400px;
+      display: flex;
+	  justify-content: center;
+	  align-items: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔍 Выберите город</h2>
+  <input type="text" id="searchInput" placeholder="Поиск по городам..." />
+
+  <ul id="cityList">
+    <li onclick="getWeather('Москва')">Москва</li>
+    <li onclick="getWeather('Санкт-Петербург')">Санкт-Петербург</li>
+    <li onclick="getWeather('Новосибирск')">Новосибирск</li>
+    <li onclick="getWeather('Екатеринбург')">Екатеринбург</li>
+    <li onclick="getWeather('Казань')">Казань</li>
+    <li onclick="getWeather('Нижний Новгород')">Нижний Новгород</li>
+    <li onclick="getWeather('Челябинск')">Челябинск</li>
+    <li onclick="getWeather('Омск')">Омск</li>
+    <li onclick="getWeather('Самара')">Самара</li>
+    <li onclick="getWeather('Ростов-на-Дону')">Ростов-на-Дону</li>
+    <li onclick="getWeather('Уфа')">Уфа</li>
+    <li onclick="getWeather('Красноярск')">Красноярск</li>
+    <li onclick="getWeather('Пермь')">Пермь</li>
+    <li onclick="getWeather('Воронеж')">Воронеж</li>
+    <li onclick="getWeather('Волгоград')">Волгоград</li>
+    <li onclick="getWeather('Сочи')">Сочи</li>
+    <li onclick="getWeather('Тюмень')">Тюмень</li>
+    <li onclick="getWeather('Иркутск')">Иркутск</li>
+    <li onclick="getWeather('Барнаул')">Барнаул</li>
+    <li onclick="getWeather('Хабаровск')">Хабаровск</li>
+    <li onclick="getWeather('Владивосток')">Владивосток</li>
+    <li onclick="getWeather('Астрахань')">Астрахань</li>
+    <li onclick="getWeather('Калининград')">Калининград</li>
+    <li onclick="getWeather('Ярославль')">Ярославль</li>
+    <li onclick="getWeather('Томск')">Томск</li>
+    <li onclick="getWeather('Кемерово')">Кемерово</li>
+    <li onclick="getWeather('Саратов')">Саратов</li>
+    <li onclick="getWeather('Тула')">Тула</li>
+    <li onclick="getWeather('Белгород')">Белгород</li>
+    <li onclick="getWeather('Ульяновск')">Ульяновск</li>
+  </ul>
+
+  <div id="weather" class="weather" style="display: none;"></div>
+
+  <script>
+    const apiKey = "6eee0ce42d9a0ee8df0794a9e2566a61";
+
+    async function getWeather(city) {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=ru&appid=${apiKey}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.cod !== 200) {
+          document.getElementById("weather").innerHTML = `Ошибка: ${data.message}`;
+          document.getElementById("weather").style.display = "block";
+          return;
+        }
+
+        document.getElementById("weather").innerHTML = `
+          <h3>Погода в городе ${data.name}</h3>
+          <p>🌡 Температура: ${data.main.temp}°C</p>
+          <p>💨 Ветер: ${data.wind.speed} м/с</p>
+          <p>🌤 Описание: ${data.weather[0].description}</p>
+        `;
+        document.getElementById("weather").style.display = "block";
+
+      } catch (err) {
+        document.getElementById("weather").innerHTML = "Ошибка при получении данных.";
+        document.getElementById("weather").style.display = "block";
+      }
+    }
+
+    // Поиск по списку городов
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      const items = document.querySelectorAll("#cityList li");
+
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "list-item" : "none";
+      });
+    });
+  </script>
+
+</body>
+</html>
